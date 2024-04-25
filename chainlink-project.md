@@ -1,12 +1,16 @@
 # Walker's Chainlink Project
 
+Notes on approach
+
+Having used Axelar to bridge USDC across several chains, I understood what a token bridge should accomplish and how it should present a front-end. I read up on Wormhole and its exploit. I made a first draft of this project and then I read up on CCIP, which has just been opened to a general audience. CCIP is a solution to this project, which I found enlightening but also distracting. I understand this project has been used since before CCIP was a thing. I tried not to just copy the construction of CCIP, but it is very clear why some of the design choices are the right ones, like separating the Committing, Risk Management, and Executing nodes. I thought about areas where CCIP could be tweaked, like how permissioned the node sets currently are and how adding new blockchains and tokens could be made more self-serve. I found little documentation about these topics, and haven't yet dug through the code repos. I also wonder about the minting/locking side of adding a new token on a supported chain. How will the destination token pool validate that an incoming request from the bridge network is valid and authorized? This seems to be the cornerstone of the whole system, and yet it is never really clarified in the documentation. I have also not specified it to any extent in this project, besides to note its existence. 3-5 pages is quite a compact space to describe the requirements and rollout details for a complex project like this. The way I lay out the milestones is lighter on details than I would normally produce for a deployment plan, owing to the fact that I would want to specify the requirements in greater detail before outlining a detailed deployment plan, but I have summarized some of the deliverables.
+
 ## Summary
 
-Define a cross-chain token bridge system. It should allow any token author to register their token contract with the token bridge. Tokens must support the ERC20 interface as well as a specification for the mint/unlock function, so that the bridging contract can trigger token creation/release on the destination contract. Additional chains are added using a more permissioned approach
+Define a cross-chain token bridge system. It should allow any token author to register their token contract with the token bridge. Tokens must support the ERC20 interface as well as a specification for the mint/unlock function, so that the bridging contract can trigger token creation/release on the destination contract. Additional chains are added using a more permissioned approach.
 
 ## Terms
 
-Bridge Governance Consortium (BGC) - the stakeholders of the bridging system who retain authority of several key components, including system parameters and membership in the various bridging network node teams.
+Bridge Governance Consortium (BGC) -- the stakeholders of the bridging system who retain authority of several key components, including system parameters and membership in the various bridging network node teams.
 
 Token author -- the owner of a given token.
 
@@ -16,19 +20,15 @@ Permissioned node team -- a teams whose membership are governed by the BGC.
 
 Permissionless node team -- a node team whose membership is governed by a consensus engine, rather than an entity.
 
-Token contracts - owned by a third party, for example USDC, Wrapper Ether, or any other ERC20.
+Token contracts -- owned by a third party, for example USDC, Wrapper Ether, or any other ERC20.
 
-Bridge contracts - maintained by the BGC, these are the contracts that handling the routing and token pooling for the bridge.
+Bridge contracts -- maintained by the BGC, these are the contracts that handling the routing and token pooling for the bridge.
 
-Supported blockchain - a blockchain that is supported by the bridging network.
+Supported blockchain -- a blockchain that is supported by the bridging network.
 
-Source chain
+Source chain -- the blockchain from which a swap request originates.
 
-The blockchain from which a swap request originates.
-
-Destination chain
-
-The blockchain that mints/unlocks the token at the receiving end of a swap transaction.
+Destination chain -- the blockchain that mints/unlocks the token at the receiving end of a swap transaction.
 
 ## Personas
 
@@ -52,19 +52,19 @@ Node operators join node teams and are paid in LINK by the bridging system for t
 
 Blockchain full-nodes are not actively a part of the bridging consensus, but access to these is required by all of the node types in order to query and transaction on source and destination chains.
 
-- Bridge transaction discovery
+- Bridge-transaction discovery
 
-Gathers a batch of bridge transactions from source chain, and pools them into a single record on the destination chain.
+Gathers a batch of bridge transactions from source chain, and pools them into a single attestation on the destination chain.
 
-- Transaction record validation
+- Attestation validation
 
-Validates transaction records on destination chain by monitoring both source and destination chains for anomalies. Can submit fraud proofs that can pause the network or trigger slashing or other consequences to offending nods.
+Validates transaction attestations on destination chain by monitoring both source and destination chains for anomalies. Can submit fraud notification that can pause the network or trigger slashing or other consequences to offending nods.
 
-Can anyone properly staked be a validator or should it be a permissioned network?
+Can anyone who is properly staked be a validator or should it be a permissioned network?
 
 - Transaction finality
 
-Submits the actual bridge transaction on the destination chain, once the transaction record has been validated. Pays gas on destination chain. In times of congestion, will retry a number of times.
+Submits the actual bridge transaction on the destination chain, once the transaction attestation has been validated. Pays gas on destination chain. In times of congestion, will retry a number of times.
 
 ### BGC developers
 
@@ -176,15 +176,15 @@ There are several different node roles. It is possible that one computer can per
 
 1. Transaction discovery
 
-The transaction discovery application takes in source chain events, pools those events into a single transaction record, and then submits that record onto the destination chain.
+The transaction discovery application takes in source chain events, pools those events into a single transaction attestation, and then submits that attestation onto the destination chain.
 
-2. Transaction Validation
+2. Attestation Validation
 
-The validation application monitors both source and destination for irregularities. A node running validation software signs off on valid transaction records. Upon finding an invalid transaction record, the application can submit a fraud notification, which could pause a given component of the network, or trigger slashing or other consequences to nodes associated with the transaction.
+The validation application monitors both source and destination for irregularities. A node running validation software signs off on valid transaction attestations. Upon finding an invalid transaction attestation, the application can submit a fraud notification, which could pause a given component of the network, or trigger slashing or other consequences to nodes associated with the transaction.
 
 3. Transaction Finality
 
-The finality application monitors the destination chain for transaction records that are posted by discovery and approved by the validation. Once all approvals have been committed to the chain, the finality application submits a request to the router contract, which will trigger the token transfer from token custody to the destination address.
+The finality application monitors the destination chain for transaction attestations that are posted by discovery and approved by the validation. Once all approvals have been committed to the chain, the finality application submits a request to the router contract, which will trigger the token transfer from token custody to the destination address.
 
 This application needs to pay for gas on the destination chain. It will therefore need to have a wallet with funds which have either been pre-funded or are funded as an automatic process of converting its LINK proceeds into native token through connection with an exchange.
 
@@ -248,7 +248,7 @@ Submit transfer request to Chainlink router, specifying the source token address
 
 (A web front-end could combine several of those steps into one flow, simplifying the process for the user.)
 
-### Validation submits a fraud proof
+### Validation submits a fraud notification
 
 TBD
 
@@ -302,43 +302,29 @@ Improve documentation and user experience. Plan for v2.0. Allow any tokens to re
 
 The significant upgrade that possibly starts to decentralize some of the centralized components.
 
+# Details not covered
+
+How does the consensus mechanism work within node teams? How are keys distributed?
+
+How do contracts in a destination chain validate incoming bridge requests?
+
+How/when are nodes paid?
+
+How/when do nodes that need to submit transactions top-up their wallets for gas fees?
+
+How do new tokens register with the router contract?
+
+How do new chains register channels with existing chains?
+
+Fraud recovery. How do you restore tokens that get stolen from a bridge?
+
 # Questions
 
-What entities have wallets? - Relayer needs to pay for transactions - Router contracts are payable
+What is the practical differences between locking vs burning on the source side? What are the pros/cons of each?
 
-What is the practical differences between wrapped and mint-and-burn architectures?
+> Does one offer better accounting?
 
-    - Both require a contract on each chain.
-
-    - Wrapped has a sort of double-entry bookkeeping feature.  The number of wrapped should match the number of locked.
-
-    - Mint-and-burn would have a way to compute the total number of tokens issued in the main chain, compared to the total active on the main chain and then the quantity on each sub-chain.
-
-What makes native assets harder than tokens?
-
-How does Chainlink add support for new chains in the node software?
-
-How do you restore tokens that were stolen?
-
-How do you distribute keys?
-
-How do you disincentivize bad behavior in nodes? Staking?
-
-How are fees paid and distributed?
-
-What tokens can be used to pay fees?
-
-Do nodes need an interface with an exchange or bridge?
-
-How is the single relayer chosen?
-
-Is the minting algorithm provided in the SDK? Is it overridable?
-
-Does the system support or rely on fraud proofs?
-
-Does the system require staking?
-
-Do signatures need to be stored on chain?
+In the case of the lock/unlock scheme, how are tokens on the destination chain locked in a pool so that they can be unlocked in a swap? This seems similar to a liquidity pool.
 
 # Instructions from Chainlink for this project
 
