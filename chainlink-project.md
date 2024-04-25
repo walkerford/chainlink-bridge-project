@@ -2,20 +2,107 @@
 
 ## Summary
 
-Define the components of a cross-chain token bridge. It should support ERC20 tokens and allow any token author to register their token contract with the token bridge.
+Define a cross-chain token bridge system. It should allow any token author to register their token contract with the token bridge. Tokens must support the ERC20 interface as well as a specification for the mint/unlock function, so that the bridging contract can trigger token creation/release on the destination contract. Additional chains are added using a more permissioned approach
+
+## Terms
+
+Bridge Governance Consortium (BGC) - the stakeholders of the bridging system who retain authority of several key components, including system parameters and membership in the various bridging network node teams.
+
+Token author -- the owner of a given token.
+
+Node teams -- the group of node who are doing performing a given task, like delivery, validation, and finality.
+
+Permissioned node team -- a teams whose membership are governed by the BGC.
+
+Permissionless node team -- a node team whose membership is governed by a consensus engine, rather than an entity.
+
+Token contracts - owned by a third party, for example USDC, Wrapper Ether, or any other ERC20.
+
+Bridge contracts - maintained by the BGC, these are the contracts that handling the routing and token pooling for the bridge.
+
+Supported blockchain - a blockchain that is supported by the bridging network.
+
+Source chain
+
+The blockchain from which a swap request originates.
+
+Destination chain
+
+The blockchain that mints/unlocks the token at the receiving end of a swap transaction.
+
+## Personas
+
+### Token authors
+
+Token authors want their token to be transferrable across chains. They expect deployment on the bridge to be easy. They will have varying security requirements, but will generally value security as a top consideration.
+
+These contracts keep track of the balances of their own users. These will support interface standards like ERC20, which will allow the router contract to move funds between accounts.
+
+### End-users
+
+End-users want to swap tokens cross-chain. They want a reliable and trustworthy service at a competitive cost.
+
+The end-user may need to manually submit the last leg of the transaction on the destination chain, in the case that the finality nodes were not able to successfully complete the transaction after a period of time. This could occur in situation of network congestion, where enough gas was not provided with the original transaction.
+
+### Node operators
+
+Node operators join node teams and are paid in LINK by the bridging system for the services they perform. They must bond LINK to incentivize good behavior and secure their spot in the consensus hierarchy.
+
+- Blockchain full-nodes
+
+Blockchain full-nodes are not actively a part of the bridging consensus, but access to these is required by all of the node types in order to query and transaction on source and destination chains.
+
+- Bridge transaction discovery
+
+Gathers a batch of bridge transactions from source chain, and pools them into a single record on the destination chain.
+
+- Transaction record validation
+
+Validates transaction records on destination chain by monitoring both source and destination chains for anomalies. Can submit fraud proofs that can pause the network or trigger slashing or other consequences to offending nods.
+
+Can anyone properly staked be a validator or should it be a permissioned network?
+
+- Transaction finality
+
+Submits the actual bridge transaction on the destination chain, once the transaction record has been validated. Pays gas on destination chain. In times of congestion, will retry a number of times.
+
+### BGC developers
+
+These developers write the bridge software, including the node application and the bridge contracts. They are responsible to fix problems.
+
+### BGC stakeholders
+
+These stakeholders are responsible for the decision making and delegation of components of the bridge. The group starts out as a company, foundation, or consortium, but likely becomes a DAO, using governance tokens to gate membership.
+
+### Attackers
+
+Attackers attack the network in various ways. They can operate malicious nodes in an attempt to block service or submit fraudulent transactions.
+
+Attackers may also attack the smart contract surface area, by submitting transactions that exploit bugs or spoof/bypass safety checks.
+
+### Regulators
+
+Regulators are governmental agencies who will most certainly approach the controlling authorities of the bridge in order to request information and potentially control or block parts of the service. The more decentralized the governance structure is, the more resilient the network will be.
 
 ## Approach
 
-Create a token bridging software stack that will augment existing Chainlink decentralize oracle infrastructure. Node operators will want to run the new software because it generates additional income. The network gains new functionality without having to build out a lot of new infrastructure.
+Create a token bridging software stack that will augment or expand existing Chainlink decentralized oracle infrastructure. The network gains new functionality without having to build out a lot of new infrastructure.
+
+- Prioritize security over speed.
+- Some node teams will be permissioned while the software matures, but will eventually become permissionless.
+- Responsibilities will be delegated in a way that makes each individual responsibility as simple as possible and therefore easier to get right. Also allows for security checkpoints.
+- BGC determines which blockchains are supported
+- Any interface-compatible token on a given supported chain should be able to register with the bridge in a permissionless manner.
+- There will be hooks to pause a given bridge, in the case of an emergency, but not the ability to sensor transactions.
 
 ## Assumptions
 
-- Validator network will continue to be a permissioned while the software matures, but will eventually become more open.
-- Prioritize security over speed.
-- Responsibilities delegated in a way that makes each individual responsibility as simple as possible and therefore easier to get right. Also allows for security checkpoints.
-- Which chains are supported will be determined by the governance consortium (permissioned).
-- Any interface-compatible token on a given supported chain should be able to register with the bridge in a permission-less manner.
-- There will be hooks to pause a given bridge, in the case of an emergency, but not the ability to sensor transactions.
+- There is demand for cross-chain bridging that users are willing to pay for both in terms of cost and time.
+- End-users will prefer this bridge because they know and value the Chainlink brand and its commitment to security.
+- Node operators will want to run the new software because it generates additional income.
+- The majority of demand will come from only a handful of chains, so minor chains can be ignored for now.
+- The given set of requirements addresses the largest potential pool of demand.
+- Competitors will exist who are more decentralized and more user-deployable or new-chain-friendly, but they are chasing a smaller portion of the pie. Our roadmap will eventually intersect with theirs, and we will have greater momentum from our initial approach, which will allow us to continue to grow market share.
 
 ## Strengths and Weaknesses
 
@@ -29,68 +116,95 @@ Strengths
 Weaknesses
 
 - Won't be as fast as other networks that have looser security assumptions.
-- Ability to add chains will be bottle-necked by development capacity of one company.
+- Ability to add chains will be bottle-necked by BGC
 - Projects building on unsupported chains will have to use other bridging options.
-- Perception that it is a permissioned network.
+- Some perception that it is a centralized network.
 
 ## Requirements
 
-- Support for ERC20 token standard
-- User calls one smart contract function on the source chain, specifying the end address, then the rest is automatic
-- Each step in the process has an API to query the status
-- Nodes are paid in LINK
-- Governance consortium manages the members of each decentralized node network
+- Support for tokens using the ERC20 standard.
 
-Nice to have
+- User calls one smart contract function on the source chain, then the rest is automatic.
+
+- Each node in the system provides an API to query the status.
+
+- Nodes are paid in LINK or native.
+
+- Bridge supports combinations of lock/unlock and mint/burn token pooling strategies.
+
+- SDK for token authors and end-users
+
+## Extras
+
+- Web application
+
+Gives end-users and easy way to submit transactions.
+
+- Web application
+
+Gives end-users an easy way to visualize the progress of a transaction
 
 - CLI
-- Web application to visualize the progress of a transaction
 
-## Personas
-
-- Developers of new tokens or chains
-- End-users who want to swap tokens cross-chain
-- Node operators
-- Chainlink developers who create stack
-- Stakeholders of Chainlink network (governance)
-
-## Components
-
-- Router contract, one deployed on each supported chain.
-
-The source-chain router is the entry point for the user. They call their transaction on the router, and then the router will pass the transaction along to the right sub-contract. The destination-chain router terminates the transaction by initiating the final token transfer on the destination chain.
-
-- Intermediate contracts
-
-Behind the router, there can be several layers of contracts. The idea is to simplify the role of each contract to make them as easily auditable as possible. Layers could include the following. Chain-specific coordinators, which have parameters suitable for their respective destination chain, or parameters for controlling limits and other QoS considerations. Token pools, which are used as the escrowing agent on the source side, whether through locking or burning, or the supplying agent on destination side, through unlocking and minting.
-
-- Node operators
-
-There are several different node roles. It is possible that one computer can perform multiples roles, but often operators find that they gain an advantage when specializing. The node roles may also be split up into separate networks, so that there is a wider delegation of oversight. Roles include the following:
-
-1. Blockchain full-nodes that maintain the blockchain for their given chain. These are used to read and write transactions to the blockchains.
-
-2. Transaction discovery nodes that subscribe to source chain events, then pool those events into a transaction for the destination chain.
-
-3. Validator nodes that monitor both source and destination for irregularities. These nodes can pause operation on specific parts of the system if necessary.
-
-4. Finality nodes that monitor the destination chain for transactions that are posted by the discovery nodes and approved by the validator nodes.
-
-- Token smart contracts
-
-Each token has its own contract on each source and destination chain, which are maintained by the token author, not Chainlink. These contracts keep track of the balances of their own users. These will support interface standards like ERC20, which will allow the router contract to move funds between accounts. These contracts will need to implement a minting function that is compatible with the authorizations that are provided by the finality nodes.
-
-- SDK for developers
-
-- Communications module for each blockchain that provides an common API to interact with full-node RPCs
+Gives technical end-users a tool for constructing transactions in a more programmatic and customizable way.
 
 - Governance contracts
 
-- Module delivery system that nodes use to pull down the components that they need to run
+Eventually when BGC becomes a DAO, there will need to be governance contracts that direct its operation.
 
-- Bridging status interface
+- Application/module delivery mechanism
 
-- Bridging front-end
+Automatically installs bridge applications and blockchain modules that bridge-node operators need for their given configuration (which chains and node-roles they are supporting).
+
+## Components
+
+### Router contract
+
+One deployed on each supported blockchain. The source-chain router is the entry point for the user. They call their transaction on the router, and then the router will pass the transaction along to the right intermediate contract. The destination-chain router terminates the transaction by initiating the final token transfer on the destination chain.
+
+### Intermediate contracts
+
+Behind the router, there can be several layers of contracts. Layers simplify the role of each individual contract, making them more easily auditable. Layers include at least these two.
+
+1. Chain-specific coordinators, which have parameters suitable for their respective destination chain, or parameters for controlling limits and other QoS considerations.
+
+2. Token custody, which are used as the escrowing agent on the source side, whether through locking or burning, or the supplying agent on destination side, through unlocking or minting.
+
+### Bridge-node applications
+
+There are several different node roles. It is possible that one computer can perform multiples roles, but often operators find that they gain an advantage when specializing, and the network will benefit when there are a diversity of physical operators. Each node role is fulfilled by a team of nodes. Roles include the following:
+
+1. Transaction discovery
+
+The transaction discovery application takes in source chain events, pools those events into a single transaction record, and then submits that record onto the destination chain.
+
+2. Transaction Validation
+
+The validation application monitors both source and destination for irregularities. A node running validation software signs off on valid transaction records. Upon finding an invalid transaction record, the application can submit a fraud notification, which could pause a given component of the network, or trigger slashing or other consequences to nodes associated with the transaction.
+
+3. Transaction Finality
+
+The finality application monitors the destination chain for transaction records that are posted by discovery and approved by the validation. Once all approvals have been committed to the chain, the finality application submits a request to the router contract, which will trigger the token transfer from token custody to the destination address.
+
+This application needs to pay for gas on the destination chain. It will therefore need to have a wallet with funds which have either been pre-funded or are funded as an automatic process of converting its LINK proceeds into native token through connection with an exchange.
+
+### Bridge-node Consensus
+
+Assuming that we can build off of existing Chainlink consensus used in DONs.
+
+### Blockchain Communication Module
+
+These modules provide a common API for accessing blockchain-specific RPCs provided by full-nodes or indexing services. There will need to be at least one module for each unique blockchain interface. Each bridge node operator will utilize the modules for the blockchains and services that they require to communicate with the blockchains that they are supporting.
+
+### Token smart contract interface
+
+Each token has its own contract on each source and destination chain, which are maintained by the token author, not BGC. These contracts will need to implement a minting function that is compatible with the authorizations that are provided by the finality nodes.
+
+### SDK for developers
+
+Token authors need an SDK that provides the lock/unlock/mint/burn base functionality that will be compatible with the requests made by finality nodes, which includes validating signatures from the various bridge nodes (discovery, validation, finality).
+
+End-users need and SDK that provides an example contract that they can use and their own interface into the bridging network. This would serve to both send and receive tokens on behalf of the user. The user can integrate this contract into their other applications.
 
 ## Workflows
 
@@ -134,17 +248,59 @@ Submit transfer request to Chainlink router, specifying the source token address
 
 (A web front-end could combine several of those steps into one flow, simplifying the process for the user.)
 
+### Validation submits a fraud proof
+
+TBD
+
+### Finality node fails to send a transaction within a given window
+
+TBD
+
 ## Milestones
 
-Alpha phase. Build a proof-of-concept that utilizes ethereum and one other chain. A user should be able to transfer LINK from one chain to the other.
+### Alpha phase
 
-Beta phase. Take the concepts from the proof-of-concept and build a starter SDK. It should be used by Chainlink to deploy its contracts to 4-5 additional chains. Make a list of the end-points that need to be modularized in order to allow for flexible insertion into a variety of chains, and sort the list into critical and nice-to-have groups. Build the critical items in this phase.
+Build a proof-of-concept that utilizes ethereum and one other chain. A user should be able to transfer LINK from one chain to the other and back. The following components are in place in a first-draft form.
 
-v1.0 phase. Refine the SDK based on experience thus-far. Start incorporating any of the nice-to-have features that represent important pain points. Possibly add a CLI.
+Users are whitelisted.
 
-v1.5 phase. Improve documentation and user experience. Plan for v2.0.
+- Router contracts
+- Intermediate contracts
+- Bridge applications
+- Bridge node consensus
+- Blockchain modules
+- LINK token contracts
 
-v2.0 phase. The significant upgrade that possibly starts to decentralize some fo the centralized components.
+### Beta phase
+
+Take the concepts from the proof-of-concept and build a starter SDK. It should be used by Chainlink to deploy its contracts to 1-2 additional chains. Add support for a stable coin like USDC.
+
+Make a list of the end-points that need to be modularized in order to allow for flexible insertion into a variety of chains, and sort the list into critical and nice-to-have groups.
+
+Add web interfaces for submitting transactions and viewing transaction status.
+
+Increase size of whitelist user set.
+
+- Modularize the end-points deemed critical
+- Deploy everything from alpha phase to 2-3 other chains
+- Publish draft SDK that is used when adding stable coin support
+- Release blockchain module for the new chain
+
+### v1.0 phase
+
+Refine the SDK based on experience thus-far. Start incorporating any of the nice-to-have features that represent important pain points. Make of list of required top-tier chains to support in this phase. Expand token whitelist, allowing token authors to deploy their own contracts.
+
+- Add support for all top-tier chains
+- Add support for additional 5-6 tokens
+- Website is up to v1.0 level
+
+### v1.5 phase
+
+Improve documentation and user experience. Plan for v2.0. Allow any tokens to register with the bridge.
+
+### v2.0 phase
+
+The significant upgrade that possibly starts to decentralize some of the centralized components.
 
 # Questions
 
@@ -184,7 +340,7 @@ Does the system require staking?
 
 Do signatures need to be stored on chain?
 
-# Instructions
+# Instructions from Chainlink for this project
 
 ## Opportunity
 
