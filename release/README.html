@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="walkers-chainlink-project">Walker's Chainlink Project</h1>
+<p>Notes on approach</p>
+<p>Having used Axelar to bridge USDC across several chains, I understood what a token bridge should accomplish and how it should present a front-end. I read up on Wormhole and its exploit. I made a first draft of this project and then I read up on CCIP, which has just been opened to a general audience. CCIP is a solution to this project, which I found enlightening but also distracting. I understand this project has been used since before CCIP was a thing. I tried not to just copy the construction of CCIP, but it is very clear why some of the design choices are the right ones, like separating the Committing, Risk Management, and Executing nodes. I thought about areas where CCIP could be tweaked, like how permissioned the node sets currently are and how adding new blockchains and tokens could be made more self-serve. I found little documentation about these topics, and haven't yet dug through the code repos. I also wonder about the minting/locking side of adding a new token on a supported chain. How will the destination token pool validate that an incoming request from the bridge network is valid and authorized? This seems to be the cornerstone of the whole system, and yet it is never really clarified in the documentation. I have also not specified it to any extent in this project, besides to note its existence. 3-5 pages is quite a compact space to describe the requirements and rollout details for a complex project like this. The way I lay out the milestones is lighter on details than I would normally produce for a deployment plan, owing to the fact that I would want to specify the requirements in greater detail before outlining a detailed deployment plan, but I have summarized some of the deliverables.</p>
+<h2 id="summary">Summary</h2>
+<p>Define a cross-chain token bridge system. It should allow any token author to register their token contract with the token bridge. Tokens must support the ERC20 interface as well as a specification for the mint/unlock function, so that the bridging contract can trigger token creation/release on the destination contract. Support for individual blockchain is added using a permissioned approach governed by a consortium.</p>
+<h2 id="terms">Terms</h2>
+<p>Bridge Governance Consortium (BGC) -- the stakeholders of the bridging system who retain authority of several key components, including system parameters and membership in the various bridging network node teams.</p>
+<p>Token author -- the owner/author of a given token contract. Responsible for deploying these contracts to the blockchains over which bridging is desired. Also responsible for calling the token register function on each respective router.</p>
+<p>Node team -- a group of nodes who are doing performing a given task, like delivery, validation, and finality. The node's interactions regarding the bridge are validated by a consensus protocol.</p>
+<p>Permissioned node team -- a teams whose membership is controlled by the BGC entity.</p>
+<p>Permissionless node team -- a node team whose membership is governed by a smart contract or consensus mechanism, rather than an entity.</p>
+<p>Token contracts -- owned by a third party, for example USDC, Wrapper Ether, or any other ERC20.</p>
+<p>Bridge contracts -- maintained by the BGC, these are the contracts that handle the routing and intermediate functions like token pooling for the bridge.</p>
+<p>Supported blockchain -- a blockchain that is supported by the bridging network. It will have bridge contracts deployed to it and a blockchain communication module implemented so the bridge-nodes can communicate with the blockchain's full-nodes or indexing service.</p>
+<p>Source chain -- the blockchain from which a swap request originates.</p>
+<p>Destination chain -- the blockchain that mints/unlocks the token at the receiving end of a swap transaction.</p>
+<p>Minting/unlocking -- Two different mechanisms for releasing tokens on a destination chain. The token contract must provide an implementation for one of these methods that is compatible with the type of attestation that the bridge contract will provide. The bridge will instruct the token contract when to mint/unlock tokens in the case of a swap request.</p>
+<h2 id="personas">Personas</h2>
+<h3 id="token-authors">Token authors</h3>
+<p>Token authors want their token to be transferrable across chains. They expect deployment on the bridge to be easy. They will have varying security requirements, but will generally value security as a top consideration.</p>
+<p>These contracts keep track of the balances of their own users. These will support interface standards like ERC20, which will allow the router contract to move funds between accounts.</p>
+<h3 id="end-users">End-users</h3>
+<p>End-users want to swap tokens cross-chain. They want a reliable and trustworthy service at a competitive cost.</p>
+<p>The end-user may need to manually submit the last leg of the transaction on the destination chain, in the case that the finality nodes were not able to successfully complete the transaction after a period of time. This could occur in situation of network congestion, where enough gas was not provided with the original transaction.</p>
+<h3 id="node-operators">Node operators</h3>
+<p>Node operators join node teams and are paid in LINK by the bridging system for the services they perform. They must bond LINK to incentivize good behavior and secure their spot in the consensus hierarchy.</p>
+<ul>
+<li>Blockchain full-nodes</li>
+</ul>
+<p>Blockchain full-nodes are not actively a part of the bridging consensus, but access to these is required by all of the node types in order to query and transaction on source and destination chains.</p>
+<ul>
+<li>Bridge-transaction discovery</li>
+</ul>
+<p>Gathers a batch of bridge transactions from source chain, and pools them into a single attestation on the destination chain.</p>
+<ul>
+<li>Attestation validation</li>
+</ul>
+<p>Validates transaction attestations on destination chain by monitoring both source and destination chains for anomalies. Can submit fraud notification that can pause the network or trigger slashing or other consequences to offending nods.</p>
+<p>Can anyone who is properly staked be a validator or should it be a permissioned network?</p>
+<ul>
+<li>Transaction finality</li>
+</ul>
+<p>Submits the actual bridge transaction on the destination chain, once the transaction attestation has been validated. Pays gas on destination chain. In times of congestion, will retry a number of times.</p>
+<h3 id="bgc-developers">BGC developers</h3>
+<p>These developers write the bridge software, including the node application and the bridge contracts. They are responsible to fix problems in the code. They want to develop a code base that balances modularity and simplicity, both so that it is easy for them to add support for new chains and new features, and so that their work can be more easily audited.</p>
+<h3 id="bgc-stakeholders">BGC stakeholders</h3>
+<p>These stakeholders are responsible for the decision making and delegation of components of the bridge. The group starts out as a company, foundation, or consortium, but likely becomes a DAO, using governance tokens to gate membership. They decide on membership in the various permissioned node teams. They direct the funding for development and marketing. They also determine various system parameters like fee rates.</p>
+<h3 id="attackers">Attackers</h3>
+<p>Attackers try to attack the network in various ways. They can operate malicious nodes in an attempt to block service or submit fraudulent transactions.</p>
+<p>Attackers may also attack the smart contract surface area, by submitting transactions that exploit bugs or spoof/bypass safety checks.</p>
+<h3 id="regulators">Regulators</h3>
+<p>Regulators are governmental agencies who will most certainly approach the controlling authorities of the bridge in order to request information and potentially control or block parts of the service. The more decentralized the governance structure is, the more resilient the network will be.</p>
+<h2 id="approach">Approach</h2>
+<p>Create a token bridging software stack that will augment or expand existing Chainlink decentralized oracle infrastructure. The network gains new functionality without having to build out a lot of new infrastructure.</p>
+<ul>
+<li>Prioritize security over speed.</li>
+<li>Some node teams will be permissioned while the software matures, but will eventually become permissionless.</li>
+<li>Delegate or layer responsibilities in a way that makes each responsibility as simple as possible and therefore easier to get right. This also allows for security checkpoints.</li>
+<li>Control which blockchains are supported. BGC determines which blockchains are supported.</li>
+<li>All any tokens on supported blockchains to be added. Any interface-compatible token on a given supported chain should be able to register with the bridge in a permissionless manner.</li>
+<li>Be flexible in ability to respond to emergencies, but don't compromise on user sovereignty. Provide hooks to rate-limit or pause a given bridge, but not the ability to sensor transactions.</li>
+<li>Support ecosystem development with documentation and SDKs for each of: blockchain owners, token owners, and end users.</li>
+<li>Inspire usage through a reference web interface for interacting with the bridge.</li>
+</ul>
+<h2 id="assumptions">Assumptions</h2>
+<ul>
+<li>There is demand for cross-chain bridging that users are willing to pay for both in terms of cost and time.</li>
+<li>End-users will prefer this bridge because they know and value the Chainlink brand and its commitment to security.</li>
+<li>Node operators will want to run the new software because it generates additional income.</li>
+<li>The majority of demand will come from only a handful of chains, so minor chains can be ignored for now.</li>
+<li>The given set of requirements addresses the largest potential pool of demand.</li>
+<li>Competitors will exist who are more decentralized and more user-deployable or new-chain-friendly, but they are chasing a smaller portion of the pie. Our roadmap will eventually intersect with theirs, and we will have greater momentum from our initial approach, which will allow us to continue to grow market share.</li>
+</ul>
+<h2 id="strengths-and-weaknesses">Strengths and Weaknesses</h2>
+<p>Strengths</p>
+<ul>
+<li>Brand earns reputation as a secure platform.</li>
+<li>Existing infrastructure gives the network an advantage over competition.</li>
+<li>Choosing to play the careful game will pay off more in the long term.</li>
+<li>Balances trade-offs between permission and permission-less.</li>
+</ul>
+<p>Weaknesses</p>
+<ul>
+<li>Won't be as fast as other networks that have looser security assumptions.</li>
+<li>Ability to add chains will be bottle-necked by BGC</li>
+<li>Projects building on unsupported chains will have to use other bridging options.</li>
+<li>Some perception that it is a centralized network.</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>
+<p>Support for tokens using the ERC20 standard.</p>
+</li>
+<li>
+<p>User calls one smart contract function on the source chain, then the rest is automatic.</p>
+</li>
+<li>
+<p>Each node in the system provides an API to query the status.</p>
+</li>
+<li>
+<p>Nodes are paid in LINK.</p>
+</li>
+<li>
+<p>Bridge supports combinations of lock/unlock and mint/burn token custody strategies.</p>
+</li>
+<li>
+<p>SDK for blockchain owner, token authors, and end-users</p>
+</li>
+</ul>
+<h2 id="extras">Extras</h2>
+<ul>
+<li>Web application</li>
+</ul>
+<p>Gives end-users and easy way to submit transactions.</p>
+<ul>
+<li>Web application</li>
+</ul>
+<p>Gives end-users an easy way to visualize the progress of a transaction</p>
+<ul>
+<li>CLI</li>
+</ul>
+<p>Gives technical end-users a tool for constructing transactions in a more programmatic and customizable way.</p>
+<ul>
+<li>Governance contracts</li>
+</ul>
+<p>Eventually when BGC becomes a DAO, there will need to be governance contracts that direct its operation.</p>
+<ul>
+<li>Application/module delivery mechanism</li>
+</ul>
+<p>Automatically installs bridge applications and blockchain modules that bridge-node operators need for their given configuration (which chains and node-roles they are supporting).</p>
+<h2 id="components">Components</h2>
+<h3 id="router-contract">Router contract</h3>
+<p>One deployed on each supported blockchain. The source-chain router is the entry point for the user. They call their transaction on the router, and then the router will pass the transaction along to the right intermediate contract. The destination-chain router terminates the transaction by initiating the final token transfer on the destination chain.</p>
+<h3 id="intermediate-contracts">Intermediate contracts</h3>
+<p>Behind the router, there can be several layers of contracts. Layers simplify the role of each individual contract, making them more easily auditable. Layers include at least these two.</p>
+<ol>
+<li>
+<p>Chain-specific coordinators, which have parameters suitable for their respective destination chain, or parameters for controlling limits and other QoS considerations.</p>
+</li>
+<li>
+<p>Token custody, which are used as the escrowing agent on the source side, whether through locking or burning, or the supplying agent on destination side, through unlocking or minting.</p>
+</li>
+</ol>
+<h3 id="bridge-node-applications">Bridge-node applications</h3>
+<p>There are several different node roles. It is possible that one computer can perform multiples roles, but often operators find that they gain an advantage when specializing, and the network will benefit when there are a diversity of physical operators. Each node role is fulfilled by a team of nodes. Roles include the following:</p>
+<ol>
+<li>Transaction discovery</li>
+</ol>
+<p>The transaction discovery application takes in source chain events, pools those events into a single transaction attestation, and then submits that attestation onto the destination chain.</p>
+<ol start="2">
+<li>Attestation Validation</li>
+</ol>
+<p>The validation application monitors both source and destination for irregularities. A node running validation software signs off on valid transaction attestations. Upon finding an invalid transaction attestation, the application can submit a fraud notification, which could pause a given component of the network, or trigger slashing or other consequences to nodes associated with the transaction.</p>
+<ol start="3">
+<li>Transaction Finality</li>
+</ol>
+<p>The finality application monitors the destination chain for transaction attestations that are posted by discovery and approved by the validation. Once all approvals have been committed to the chain, the finality application submits a request to the router contract, which will trigger the token transfer from token custody to the destination address.</p>
+<p>This application needs to pay for gas on the destination chain. It will therefore need to have a wallet with funds which have either been pre-funded or are funded as an automatic process of converting its LINK proceeds into native token through connection with an exchange.</p>
+<h3 id="bridge-node-consensus">Bridge-node Consensus</h3>
+<p>TBD. Build off of existing Chainlink consensus used in DONs.</p>
+<h3 id="blockchain-communication-module">Blockchain Communication Module</h3>
+<p>These modules provide a common API for accessing blockchain-specific RPCs provided by full-nodes or indexing services. There will need to be at least one module for each unique blockchain interface. Each bridge node operator will utilize the modules for the blockchains and services that they require to communicate with the blockchains that they are supporting.</p>
+<h3 id="blockchain-configuration-module">Blockchain Configuration Module</h3>
+<p>A set of configuration parameters that describe properties like finality, address format, data limitations, native token details, etc. This could be used by various bridge contracts and nodes to validate incoming and properly form outgoing messages.</p>
+<h3 id="token-smart-contract-interface">Token smart contract interface</h3>
+<p>Each token has its own contract on each source and destination chain, which are maintained by the token author, not BGC. These contracts will need to implement minting/unlocking functions that are compatible with the authorizations that are provided by the bridge nodes.</p>
+<h3 id="sdk-for-developers">SDK for developers</h3>
+<p>Blockchain developers need an SDK that will help them build the blockchain communication and configuration modules, so that they chain is ready to be put in the support queue.</p>
+<p>Token authors need an SDK that provides the lock/unlock/mint/burn base functionality that will be compatible with the requests made by finality nodes, which includes validating signatures from the various bridge nodes (discovery, validation, finality).</p>
+<p>End-users need and SDK that provides an example contract that they can use and their own interface into the bridging network. This would serve to both send and receive tokens on behalf of the user. The user can integrate this contract into their other applications.</p>
+<h2 id="workflows">Workflows</h2>
+<h3 id="deploying-support-for-a-new-chain">Deploying support for a new chain</h3>
+<p>Develop communications and configuration modules that bridge nodes use to interact with the RPCs of blockchain full-nodes. Deploy on the module delivery system (if available).</p>
+<p>Deploy router and intermediate contracts to new chain.</p>
+<p>Deploy new intermediate contracts to each existing chain. This will register the blockchain as a new pathway with the router.</p>
+<p>Update the website with new contract addresses, chain-id, etc.</p>
+<p>Consideration: There might need to be a testing mode, where only whitelisted addresses can use the new pathway, so that the new contracts can be validated properly. Upon completion of testing, the contracts are put into production mode, where anyone can use them.</p>
+<h3 id="deploy-support-for-a-new-token">Deploy support for a new token</h3>
+<p>Develop new token contract that includes support for minting/unlocking.</p>
+<p>Deploy new token contract to two or more blockchains.</p>
+<p>Register new token with the bridge router contracts on each chain.</p>
+<p>Send a test transaction.</p>
+<h3 id="end-user-transferring-cross-chain">End-user transferring cross-chain</h3>
+<p>Find the contract address for the token on the source chain.</p>
+<p>Find the chain-id and wallet address on the destination chain.</p>
+<p>Find the bridge router address on the source chain.</p>
+<p>Submit a pricing request to router contract, to learn how much a given transaction should cost.</p>
+<p>Submit swap-token transfer approval to token contract on source chain for router to be a spender.</p>
+<p>Submit payment-token transfer approval, in case a non-native payment (like LINK) will be used.</p>
+<p>Submit transfer request to router contract, specifying the source token address, transfer amount, destination chain-id, destination wallet address, and payment method. Native token payment, if used, accompanies this transaction. User receives a transaction ID.</p>
+<p>User can manually query bridge nodes and bridge contracts with the transaction ID to get status from each stage.</p>
+<p>Consideration: A web front-end could combine several of those steps into one flow, simplifying the process for the user.</p>
+<h3 id="validator-submits-a-fraud-notification">Validator submits a fraud notification</h3>
+<p>TBD</p>
+<h3 id="finality-node-fails-to-send-a-transaction-within-a-given-window">Finality node fails to send a transaction within a given window</h3>
+<p>TBD</p>
+<h2 id="milestones">Milestones</h2>
+<h3 id="alpha-phase">Alpha phase</h3>
+<p>Build a proof-of-concept that utilizes ethereum and one other chain. A user should be able to transfer LINK from one chain to the other and back. Users are whitelisted. The following components are in place in a first-draft form:</p>
+<ul>
+<li>Router contracts</li>
+<li>Intermediate contracts</li>
+<li>Bridge applications running on nodes</li>
+<li>Bridge node consensus operational for each node team</li>
+<li>Blockchain modules appropriate for each supported blockchain</li>
+<li>LINK token contracts on both blockchains</li>
+</ul>
+<h3 id="beta-phase">Beta phase</h3>
+<p>Take the concepts from the proof-of-concept and build a starter SDK. It should be used by Chainlink to deploy its contracts to 1-2 additional chains. Add support for a stable coin like USDC.</p>
+<p>Make a list of the end-points that need to be modularized in order to allow for flexible insertion into a variety of chains, and sort the list into critical and nice-to-have groups.</p>
+<p>Add web interfaces for submitting transactions and viewing transaction status.</p>
+<p>Increase size of whitelist user set.</p>
+<ul>
+<li>Modularize the end-points deemed critical</li>
+<li>Deploy everything from alpha phase to 2-3 other chains</li>
+<li>Publish draft SDK that is used when adding stable coin support</li>
+<li>Release blockchain module for the new chain</li>
+</ul>
+<h3 id="v10-phase">v1.0 phase</h3>
+<p>Refine the SDK based on experience thus-far. Start incorporating any of the nice-to-have features that represent important pain points. Make of list of required top-tier chains to support in this phase. Expand token whitelist, allowing token authors to deploy their own contracts.</p>
+<ul>
+<li>Add support for all top-tier chains</li>
+<li>Add support for additional 5-6 tokens</li>
+<li>Website is up to v1.0 level</li>
+</ul>
+<h3 id="v15-phase">v1.5 phase</h3>
+<p>Improve documentation and user experience. Plan for v2.0. Allow any tokens to register with the bridge.</p>
+<h3 id="v20-phase">v2.0 phase</h3>
+<p>The significant upgrade that possibly starts to decentralize some of the centralized components.</p>
+<h1 id="details-not-covered">Details not covered</h1>
+<p>How does the consensus mechanism work within node teams? How are keys distributed?</p>
+<p>How do contracts in a destination chain validate incoming bridge requests?</p>
+<p>How/when are nodes paid?</p>
+<p>How/when do nodes that need to submit transactions top-up their wallets for gas fees?</p>
+<p>How do new tokens register with the router contract?</p>
+<p>How do new chains register channels with existing chains?</p>
+<p>Fraud recovery. How do you restore tokens that get stolen from a bridge?</p>
+<h1 id="other-questions">Other Questions</h1>
+<p>What is the practical differences between locking vs burning on the source side? What are the pros/cons of each?</p>
+<blockquote>
+<p>Does one offer better accounting?</p>
+</blockquote>
+<p>In the case of the lock/unlock scheme, how are tokens on the destination chain locked in a pool so that they can be unlocked in a swap? This seems similar to a liquidity pool.</p>
+<h1 id="instructions-from-chainlink-for-this-project">Instructions from Chainlink for this project</h1>
+<h2 id="opportunity">Opportunity</h2>
+<ol>
+<li>Users send tokens to a smart contract for locking on the “home” chain (Ethereum mainnet), providing a destination address on the “remote” chain.</li>
+<li>Through a mechanism, the tokens should be bridged and then sent to them on a remote chain.</li>
+</ol>
+<p>The bridge should be built such that it can support any ERC20 token, and ideally, require as little work as possible to scale and repeat across blockchains. Minimizing trust and single points of failure is also a positive goal.</p>
+<h2 id="objectives">Objectives</h2>
+<ol>
+<li>
+<p>Gather requirements and present a potential approach for solving the above problem. Please confirm any assumptions and discuss the strategy with the hiring manager. Present the strengths and weaknesses of your approach.</p>
+</li>
+<li>
+<p>Produce a 3-5 page specification presenting the
+a. Product requirements,
+b. Components (services, smart contracts, tools etc) of the solution.
+i. Note: Define components at a high level, no requirements to produce any code.
+c. User personas and stakeholders
+d. Various workflows and application behavior for each user / stakeholder. This should also involve creating an operational process around setting up / releasing the components.</p>
+</li>
+<li>
+<p>Produce a list of milestones for the project. For each milestone, please state the acceptance criteria. Please be as specific as possible.</p>
+</li>
+</ol>
+
+</body>
+</html>
